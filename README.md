@@ -18,18 +18,6 @@ Este é um projeto Java de exemplo que demonstra um sistema de gerenciamento de 
 # Sistema de Gerenciamento de Contratos
 Este é um sistema de gerenciamento desenvolvido em Java para realizar operações CRUD (Create, Read, Update, Delete) em diferentes entidades, como Cliente, Funcionário, Plano, Empresa e Contrato. Cada entidade possui um menu próprio para interação com o usuário.
 
-## Funcionalidades
-1. Menu Cliente: Permite ao usuário realizar operações relacionadas aos clientes, como adicionar, visualizar, atualizar e excluir informações.
-2. Menu Funcionário: Fornece funcionalidades semelhantes ao menu Cliente, mas para entidades de Funcionário.
-3. Menu Plano: Gerencia os planos disponíveis no sistema, permitindo adição, visualização, atualização e exclusão.
-4. Menu Empresa: Oferece funcionalidades relacionadas às empresas cadastradas no sistema, como adicionar, visualizar, atualizar e excluir informações.
-5. Menu Contrato: Permite a criação, visualização, atualização e exclusão de contratos entre clientes e empresas.
-
 ## Pré-requisitos
 Java Development Kit (JDK) instalado
 
-## Execução
-1. Clone o repositório para o seu ambiente local.
-2. Abra o projeto em sua IDE Java preferida.
-3. Compile e execute o arquivo Main.java.
-4. Siga as instruções no menu para interagir com o sistema.
