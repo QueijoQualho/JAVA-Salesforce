@@ -1,4 +1,4 @@
-package com.fiap.br.models;
+package com.fiap.br.models.Produto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.fiap.br.connection.DatabaseConnection;
 import com.fiap.br.models.Plano;
-import com.fiap.br.models.Produto;
+import com.fiap.br.models.Produto.Produto;
 
 public class ProdutoRepository {
     private Connection connection = DatabaseConnection.getConnection();
@@ -37,6 +37,28 @@ public class ProdutoRepository {
 
         return produtos;
     }
+
+    public List<Produto> getAllProdutos() {
+    String sql = "SELECT * FROM Produto";
+    List<Produto> produtos = new ArrayList<>();
+
+    try (PreparedStatement pstm = connection.prepareStatement(sql);
+         ResultSet rs = pstm.executeQuery()) {
+
+        while (rs.next()) {
+            Produto produto = new Produto();
+            produto.setId(rs.getLong("id_produto"));
+            produto.setNome(rs.getString("nome"));
+            produto.setPreco(rs.getDouble("preco"));
+
+            produtos.add(produto);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return produtos;
+}
 
     public void saveProduto(List<Produto> produtos, Long idPlano) {
         String sql = "INSERT INTO Produto (nome, preco, id_plano) VALUES (?, ?, ?)";
