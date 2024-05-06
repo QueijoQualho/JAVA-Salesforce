@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fiap.br.models.Produto.Produto;
 import com.fiap.br.models.enums.TipoPlano;
 
 import lombok.AllArgsConstructor;

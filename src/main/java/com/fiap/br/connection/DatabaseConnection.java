@@ -21,6 +21,9 @@ public class DatabaseConnection {
             URL_ORACLE = properties.getProperty("jdbc.url");
             USER = properties.getProperty("jdbc.username");
             PASSWORD = properties.getProperty("jdbc.password");
+            System.out.println(URL_ORACLE);
+            System.out.println(USER);
+            System.out.println(PASSWORD);
         } catch (IOException e) {
             throw new RuntimeException("Falha ao carregar as propriedades do banco de dados", e);
         }

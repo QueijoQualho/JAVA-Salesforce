@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.fiap.br.connection.DatabaseConnection;
 import com.fiap.br.models.Plano;
-import com.fiap.br.models.Produto.Produto;
+import com.fiap.br.models.Produto;
 
 public class ProdutoRepository {
     private Connection connection = DatabaseConnection.getConnection();
