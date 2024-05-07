@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,7 +18,6 @@ import lombok.Setter;
 public class Contrato {
     private Long id;
     private Plano plano;
-    private Funcionario funcionario;
     private EmpresaCliente empresa;
     private TipoPagamento tipoPagamento;
 

@@ -1,21 +1,19 @@
-package com.fiap.br.models.pessoa;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.fiap.br.models.Endereco;
+package com.fiap.br.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
-public abstract class Usuario {
+public class Usuario {
     private Long id;
     private String nome;
     private String telefone;
@@ -23,6 +21,7 @@ public abstract class Usuario {
     private String cpf;
     private String cargo;
     private String senha;
+    private Boolean isAdmin;
     private List<Endereco> listaEnderecos = new ArrayList<>();
 
     public void addEndereco(Endereco endereco) {

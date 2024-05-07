@@ -16,7 +16,6 @@ import com.fiap.br.models.pessoa.Funcionario;
 
 public class ContratoRepository {
     private Connection connection = DatabaseConnection.getConnection();
-    private UsuarioRepository funcionarioRepository = new FuncionarioRepository();
     private EmpresaClienteRepository empresaClienteRepository = new EmpresaClienteRepository();
     private PlanoRepository planoRepository = new PlanoRepository();
 

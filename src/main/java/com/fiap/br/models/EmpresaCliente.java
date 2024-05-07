@@ -1,7 +1,5 @@
 package com.fiap.br.models;
 
-import com.fiap.br.models.pessoa.Cliente;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EmpresaCliente {
     private Long id;
-    private Cliente cliente;
+    private Usuario cliente;
     private String cnpj;
     private String telefone;
     private String razaoSocial;

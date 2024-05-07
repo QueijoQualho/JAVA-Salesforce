@@ -6,23 +6,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fiap.br.models.Contrato;
 import com.fiap.br.models.Endereco;
-import com.fiap.br.models.pessoa.Cliente;
-import com.fiap.br.models.pessoa.Usuario;
+import com.fiap.br.models.Usuario;
 
-public class ClienteRepository extends UsuarioRepository {
+public class ClienteRepository {
     private EnderecoRepository enderecoRepo = new EnderecoRepository();
 
-    @Override
     public List<Usuario> getUsuarios() {
-        String sql = "SELECT u.* FROM Usuario u INNER JOIN Cliente c ON u.id_usuario = c.id_cliente ORDER BY u.nome ASC";
+        String sql = "SELECT * from Usuario";
         List<Usuario> usuarios = new ArrayList<>();
 
         try (PreparedStatement pstm = connection.prepareStatement(sql);
                 ResultSet rs = pstm.executeQuery()) {
 
             while (rs.next()) {
-                Cliente newCliente = new Cliente();
+                Usuario newCliente = new Usuario();
 
                 newCliente.setId(rs.getLong("id_usuario"));
                 newCliente.setNome(rs.getString("nome"));
@@ -31,6 +30,7 @@ public class ClienteRepository extends UsuarioRepository {
                 newCliente.setCpf(rs.getString("cpf"));
                 newCliente.setCargo(rs.getString("cargo"));
                 newCliente.setSenha(rs.getString("senha"));
+                newCliente.setIsAdmin(rs.getBoolean("isAdmin"));
 
 
                 List<Endereco> enderecos = enderecoRepo.getEnderecosByUsuarioId(rs.getLong("id_usuario"));
@@ -45,16 +45,15 @@ public class ClienteRepository extends UsuarioRepository {
         return usuarios;
     }
 
-    @Override
     public Usuario getUsuarioById(Long id) {
-        String sql = "SELECT u.* FROM Usuario u INNER JOIN Cliente c ON u.id_usuario = c.id_cliente WHERE id_cliente = ?";
-        Cliente cliente = null;
+        String sql = "SELECT * FROM Usuario WHERE id_usuario = ? ";
+        Usuario cliente = null;
     
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
             pstm.setLong(1, id);
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
-                    cliente = new Cliente();
+                    cliente = new Usuario();
                     cliente.setId(rs.getLong("id_usuario"));
                     cliente.setNome(rs.getString("nome"));
                     cliente.setTelefone(rs.getString("telefone"));
@@ -62,7 +61,8 @@ public class ClienteRepository extends UsuarioRepository {
                     cliente.setCpf(rs.getString("cpf"));
                     cliente.setCargo(rs.getString("cargo"));
                     cliente.setSenha(rs.getString("senha"));
-    
+                    cliente.setIsAdmin(rs.getBoolean("isAdmin"));
+
                     List<Endereco> enderecos = enderecoRepo.getEnderecosByUsuarioId(rs.getLong("id_usuario"));
                     cliente.setListaEnderecos(enderecos);
                 }
@@ -74,8 +74,6 @@ public class ClienteRepository extends UsuarioRepository {
         return cliente;
     }
     
-
-    @Override
     public void saveUsuario(Usuario usuario) {
         String sql = "INSERT INTO Usuario (nome, telefone, email, cpf, cargo, senha) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -94,11 +92,6 @@ public class ClienteRepository extends UsuarioRepository {
                 Long idCliente = generatedKeys.getLong(1);
                 usuario.setId(idCliente);
                 enderecoRepo.saveEnderecos(usuario.getListaEnderecos(), idCliente);
-
-                if (usuario instanceof Cliente) {
-                    Cliente cliente = (Cliente) usuario;
-                    saveCliente(cliente);
-                }
             }
         } catch (Exception e) {
             System.out.println("Erro ao salvar o usuário213123 no banco de dados!");
@@ -106,21 +99,16 @@ public class ClienteRepository extends UsuarioRepository {
         }
     }
 
-    @Override
     public void updateUsuario(Usuario usuario) {
-        if (!(usuario instanceof Cliente)) {
-            throw new IllegalArgumentException("O objeto passado não é um Cliente válido.");
-        }
 
-        Cliente cliente = (Cliente) usuario;
         String sql = "UPDATE Usuario SET nome = ?, telefone = ?, email = ?, cargo = ? WHERE id_usuario = ?";
 
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-            pstm.setString(1, cliente.getNome());
-            pstm.setString(2, cliente.getTelefone());
-            pstm.setString(3, cliente.getEmail());
-            pstm.setString(4, cliente.getCargo());
-            pstm.setLong(5, cliente.getId());
+            pstm.setString(1, usuario.getNome());
+            pstm.setString(2, usuario.getTelefone());
+            pstm.setString(3, usuario.getEmail());
+            pstm.setString(4, usuario.getCargo());
+            pstm.setLong(5, usuario.getId());
 
             pstm.executeUpdate();
         } catch (SQLException e) {
@@ -129,7 +117,6 @@ public class ClienteRepository extends UsuarioRepository {
         }
     }
 
-    @Override
     public void deleteUsuario(Long id) {
         String sql = "DELETE FROM Usuario WHERE id_usuario = ?";
 
@@ -139,18 +126,6 @@ public class ClienteRepository extends UsuarioRepository {
         } catch (SQLException e) {
             System.out.println("Erro ao excluir o cliente do banco de dados!");
             e.printStackTrace();
-        }
-    }
-
-    private void saveCliente(Cliente cliente) throws SQLException {
-        String sql = "INSERT INTO Cliente (id_cliente) VALUES (?)";
-
-        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-            pstm.setLong(1, cliente.getId());
-            pstm.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Erro ao salvar o cliente no banco de dados!");
-            throw e;
         }
     }
    
