@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fiap.br.connection.DatabaseConnection;
 import com.fiap.br.models.Contrato;
 import com.fiap.br.models.EmpresaCliente;
 import com.fiap.br.models.Plano;
 import com.fiap.br.models.enums.TipoPagamento;
-import com.fiap.br.models.pessoa.Funcionario;
+import com.fiap.br.util.connection.DatabaseConnection;
 
 public class ContratoRepository {
     private Connection connection = DatabaseConnection.getConnection();

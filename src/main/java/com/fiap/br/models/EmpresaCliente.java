@@ -1,14 +1,8 @@
 package com.fiap.br.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class EmpresaCliente {
     private Long id;
     private Usuario cliente;
@@ -17,18 +11,5 @@ public class EmpresaCliente {
     private String razaoSocial;
     private String nomeFantasia;
     private int tamanho;
-
-    @Override
-    public String toString() {
-        return "EmpresaCliente{" +
-                "id=" + id +
-                ", cliente=" + cliente +
-                ", cnpj='" + cnpj + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", razaoSocial='" + razaoSocial + '\'' +
-                ", nomeFantasia='" + nomeFantasia + '\'' +
-                ", tamanho=" + tamanho +
-                '}';
-    }
 
 }

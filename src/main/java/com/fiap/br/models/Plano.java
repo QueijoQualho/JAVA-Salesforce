@@ -7,15 +7,9 @@ import java.util.List;
 
 import com.fiap.br.models.enums.TipoPlano;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class Plano {
     private Long id;
     private String nomeFantasia;
@@ -47,12 +41,31 @@ public class Plano {
             default:
                 throw new IllegalArgumentException("Tipo de plano inválido");
         }
-
+        calcDataFinal();
     }
 
     /* Method */
     public void addProduto(Produto produto) {
         listaProdutos.add(produto);
+    }
+
+    private void calcDataFinal(){
+        switch (this.tipoPlano) {
+            case ANUAL:
+                this.dataFinal = dataInicio.plusYears(1);
+                break;
+            case SEMESTRAL:
+                this.dataFinal = dataInicio.plusMonths(6);
+                break;
+            case TRIMESTRAL:
+                this.dataFinal = dataInicio.plusMonths(3);
+                break;
+            case MENSAL:
+                this.dataFinal = dataInicio.plusMonths(1);
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de plano inválido");
+        }
     }
 
     public void calcValor() {
@@ -67,23 +80,4 @@ public class Plano {
 
         this.valor = valorTotal;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Plano {\n");
-        sb.append("  Id: ").append(id).append("\n");
-        sb.append("  Nome Fantasia: ").append(nomeFantasia).append("\n");
-        sb.append("  Tipo de Plano: ").append(tipoPlano).append("\n");
-        sb.append("  Data de Início: ").append(dataInicio).append("\n");
-        sb.append("  Data Final: ").append(dataFinal).append("\n");
-        sb.append("  Valor: ").append(valor).append("\n");
-        sb.append("  Lista de Produtos:\n");
-        for (Produto produto : listaProdutos) {
-            sb.append("    ").append(produto).append("\n");
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
 }

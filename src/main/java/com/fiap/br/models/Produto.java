@@ -1,17 +1,16 @@
 package com.fiap.br.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Produto{
+import lombok.Data;
+
+@Data
+public class Produto {
+    @JsonProperty("id_produto")
     private Long id;
+    @JsonProperty("nome")
     private String nome;
+    @JsonProperty("preco")
     private double preco;
 
 }

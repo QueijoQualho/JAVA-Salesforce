@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fiap.br.connection.DatabaseConnection;
 import com.fiap.br.models.Endereco;
+import com.fiap.br.util.connection.DatabaseConnection;
 
 public class EnderecoRepository {
     private Connection connection = DatabaseConnection.getConnection();

@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fiap.br.connection.DatabaseConnection;
 import com.fiap.br.models.Plano;
 import com.fiap.br.models.Produto;
 import com.fiap.br.models.enums.TipoPlano;
+import com.fiap.br.util.connection.DatabaseConnection;
 
 public class PlanoRepository {
 

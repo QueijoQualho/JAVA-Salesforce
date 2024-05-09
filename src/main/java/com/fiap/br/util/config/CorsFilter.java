@@ -1,4 +1,4 @@
-package com.fiap.br.config;
+package com.fiap.br.util.config;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
