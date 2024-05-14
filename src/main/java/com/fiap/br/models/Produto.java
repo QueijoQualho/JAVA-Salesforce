@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName("produtos")
 public class Produto {
     @JsonProperty("id_produto")
-    private Long id;
+    private int id;
     @JsonProperty("nome")
     private String nome;
     @JsonProperty("preco")

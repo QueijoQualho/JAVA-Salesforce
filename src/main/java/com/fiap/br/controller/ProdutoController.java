@@ -4,7 +4,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.fiap.br.models.Produto;
@@ -35,17 +34,17 @@ public class ProdutoController {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduto(@PathParam("id") Long id, Produto produto) {
+    public Response updateProduto(@PathParam("id") int id, Produto produto) {
         produto.setId(id); 
-        produtoRepository.update(produto);
+        produtoRepository.update(produto, id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     /* @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProduto(@PathParam("id") Long id) {
-        produtoRepository.delete(Produto.class);
+    public Response deleteProduto(@PathParam("id") int id) {
+        produtoRepository.delete(Produto.class, id);
         return Response.status(Response.Status.NO_CONTENT).build();
 
     } */

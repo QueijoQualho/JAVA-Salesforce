@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fiap.br.util.connection.DatabaseConnection;
@@ -17,14 +20,24 @@ public class QueryExecutor {
 
     private Connection connection = DatabaseConnection.getConnection();
 
-    public <T> List<T> execute(Class<T> entityClass, String sql, Object[] params, CRUDOperation operation) {
+    public <T> List<T> execute(Class<T> entityClass, String sql, Object[] params, CRUDOperation operation,
+            Optional<Integer> id) {
         List<T> results = new ArrayList<>();
 
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
 
             if (params != null) {
-                setParameters(pstm, params);
+                if (id.isPresent()) {
+                    Integer idValue = id.get();
+                    Object[] paramsWithId = Arrays.copyOf(params, params.length + 1);
+
+                    paramsWithId[params.length] = idValue;
+                    setParameters(pstm, paramsWithId);
+                } else {
+                    setParameters(pstm, params);
+                }
             }
+
             switch (operation) {
                 case CREATE:
                 case UPDATE:
@@ -75,7 +88,7 @@ public class QueryExecutor {
     }
 
     public <T> Map<String, String> getColumnNames(Class<T> entityClass) {
-        Map<String, String> columnNames = new HashMap<>();
+        Map<String, String> columnNames = new LinkedHashMap<>();
         for (Field field : entityClass.getDeclaredFields()) {
             if (field.isAnnotationPresent(JsonProperty.class)) {
                 JsonProperty annotation = field.getAnnotation(JsonProperty.class);
@@ -84,4 +97,5 @@ public class QueryExecutor {
         }
         return columnNames;
     }
+
 }
