@@ -23,6 +23,13 @@ public class ProdutoController {
     public List<Produto> getProdutos() {
         return produtoRepository.findAll(Produto.class);
     }
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Produto> getProdutosbyId(@PathParam("id") int id) {
+            return produtoRepository.findOne(Produto.class, id);
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -40,12 +47,11 @@ public class ProdutoController {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    /* @DELETE
+    @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteProduto(@PathParam("id") int id) {
         produtoRepository.delete(Produto.class, id);
         return Response.status(Response.Status.NO_CONTENT).build();
-
-    } */
+    }
 }

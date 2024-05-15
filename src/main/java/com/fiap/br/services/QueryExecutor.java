@@ -26,16 +26,16 @@ public class QueryExecutor {
 
         try (PreparedStatement pstm = connection.prepareStatement(sql)) {
 
-            if (params != null) {
-                if (id.isPresent()) {
-                    Integer idValue = id.get();
-                    Object[] paramsWithId = Arrays.copyOf(params, params.length + 1);
+            if (id.isPresent()) {
+                Integer idValue = id.get();
 
-                    paramsWithId[params.length] = idValue;
-                    setParameters(pstm, paramsWithId);
-                } else {
-                    setParameters(pstm, params);
-                }
+                params = (params == null) ? new Object[] { idValue } : Arrays.copyOf(params, params.length + 1);
+                params[params.length - 1] = idValue;
+
+            }
+
+            if (params != null) {
+                setParameters(pstm, params);
             }
 
             switch (operation) {

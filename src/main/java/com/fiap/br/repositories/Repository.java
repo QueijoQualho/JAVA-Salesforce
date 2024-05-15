@@ -22,6 +22,24 @@ public class Repository<T> {
         this.queryExecutor = queryExecutor;
     }
 
+    public List<T> findOne(Class<T> entityClass, int id) {
+        String tableName = getTableName(entityClass);
+        Optional<Integer> idOptional = Optional.of(id);
+
+        try {
+            Field idField = entityClass.getDeclaredField("id");
+            idField.setAccessible(true);
+
+            JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
+
+            String sql = "SELECT * FROM " + tableName + "WHERE " + annotation.value() + " = ?";
+            return queryExecutor.execute(entityClass, sql, null, CRUDOperation.READ, idOptional);
+        } catch (Exception e) {
+            logger.error("Erro o Pegar " + tableName + ": " + e.getMessage(), e);
+        }
+        return null;
+    }
+
     public List<T> findAll(Class<T> entityClass) {
         String tableName = getTableName(entityClass);
         String sql = "SELECT * FROM " + tableName;
@@ -34,31 +52,32 @@ public class Repository<T> {
         Map<String, String> columnNames = queryExecutor.getColumnNames(entityClass);
         StringBuilder sqlQuery = new StringBuilder("INSERT INTO ").append(tableName).append(" (");
         StringBuilder valuesBuilder = new StringBuilder(" VALUES (");
-    
+
         try {
             List<Object> params = buildParamsList(entity);
-    
+
             columnNames.remove("id");
-    
+
             if (params.size() > 0) {
-                params.remove(0); 
+                params.remove(0);
             }
-    
+
             for (String columnName : columnNames.values()) {
                 sqlQuery.append(columnName).append(", ");
                 valuesBuilder.append("?, ");
             }
-    
+
             sqlQuery.deleteCharAt(sqlQuery.length() - 2).append(")");
             valuesBuilder.deleteCharAt(valuesBuilder.length() - 2).append(")");
             sqlQuery.append(valuesBuilder);
-    
-            queryExecutor.execute(entityClass, sqlQuery.toString(), params.toArray(), CRUDOperation.CREATE, Optional.empty());
+
+            queryExecutor.execute(entityClass, sqlQuery.toString(), params.toArray(), CRUDOperation.CREATE,
+                    Optional.empty());
         } catch (Exception e) {
             logger.error("Error occurred while saving entity: " + e.getMessage(), e);
         }
     }
-    
+
     public void update(T entity, int id) {
         Class<?> entityClass = entity.getClass();
         String tableName = getTableName(entityClass);
@@ -83,18 +102,20 @@ public class Repository<T> {
         }
     }
 
-    public void delete(T entity, int id) {
-        Class<?> entityClass = entity.getClass();
+    public void delete(Class<T> entityClass, int id) {
         String tableName = getTableName(entityClass);
-        StringBuilder sqlQuery = new StringBuilder("DELETE FROM ").append(tableName).append(" WHERE id = ?");
         Optional<Integer> idOptional = Optional.of(id);
 
         try {
             Field idField = entityClass.getDeclaredField("id");
             idField.setAccessible(true);
-            Object idValue = idField.get(entity);
 
-            queryExecutor.execute(entityClass, sqlQuery.toString(), new Object[] { idValue }, CRUDOperation.DELETE, idOptional);
+            JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
+
+            StringBuilder sqlQuery = new StringBuilder("DELETE FROM ").append(tableName)
+                    .append(" WHERE " + annotation.value() + "= ?");
+
+            queryExecutor.execute(entityClass, sqlQuery.toString(), null, CRUDOperation.DELETE, idOptional);
         } catch (Exception e) {
             logger.error("Error occurred while deleting entity: " + e.getMessage(), e);
         }
