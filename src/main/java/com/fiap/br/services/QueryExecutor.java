@@ -1,19 +1,22 @@
 package com.fiap.br.services;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fiap.br.models.enums.CRUDOperation;
 import com.fiap.br.util.connection.DatabaseConnection;
 
 public class QueryExecutor {
@@ -63,10 +66,15 @@ public class QueryExecutor {
 
     private void setParameters(PreparedStatement statement, Object[] params) throws SQLException {
         for (int i = 0; i < params.length; i++) {
-            statement.setObject(i + 1, params[i]);
+            Object param = params[i];
+            if (param instanceof Enum) {
+                statement.setString(i + 1, ((Enum<?>) param).name());
+            } else {
+                statement.setObject(i + 1, param);
+            }
         }
-
     }
+    
 
     private <T> T mapResultSetToEntity(ResultSet rs, Class<T> entityClass) throws SQLException {
         T entity = null;
@@ -79,12 +87,39 @@ public class QueryExecutor {
                 String columnName = entry.getValue();
                 Field field = entityClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                field.set(entity, rs.getObject(columnName));
+
+                Object value = rs.getObject(columnName);
+
+                handleSpecialCases(field, entity, value);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return entity;
+    }
+
+    private void handleSpecialCases(Field field, Object entity, Object value) throws IllegalAccessException {
+        /* Por algum motivo o ORACLE devolve int/number como big decimal */
+        if (value instanceof BigDecimal) {
+            BigDecimal bigDecimalValue = (BigDecimal) value;
+            if (field.getType().isAssignableFrom(double.class)) {
+                field.set(entity, bigDecimalValue.doubleValue());
+            } else if (field.getType().isAssignableFrom(int.class)) {
+                field.set(entity, bigDecimalValue.intValue());
+            }
+        } else if (field.getType().isEnum()) {
+            @SuppressWarnings("unchecked")
+            Class<Enum<?>> enumType = (Class<Enum<?>>) field.getType();
+            Enum<?> enumValue = Enum.valueOf(enumType.asSubclass(Enum.class), value.toString());
+            field.set(entity, enumValue);
+        } else if (field.getType() == LocalDate.class && value instanceof Timestamp) {
+            Timestamp timestampValue = (Timestamp) value;
+            LocalDate localDateValue = timestampValue.toLocalDateTime().toLocalDate();
+            field.set(entity, localDateValue);
+        } else {
+            field.set(entity, value);
+        }
     }
 
     public <T> Map<String, String> getColumnNames(Class<T> entityClass) {

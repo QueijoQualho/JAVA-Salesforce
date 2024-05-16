@@ -6,14 +6,14 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static Connection connection;
-/*     private static final String url = "jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL";
+    private static final String url = "jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL";
     private static final String username = "RM553912";
-    private static final String password = "141204"; */
+    private static final String password = "141204";
 
     /* CASO ESTEJA NO MYSQL */
-    private static final String url = "jdbc:mysql://localhost:3306/salesforce";
+   /*  private static final String url = "jdbc:mysql://localhost:3306/salesforce";
     private static final String username = "root";
-    private static final String password = "root";
+    private static final String password = "root"; */
 
     private DatabaseConnection() {
     }

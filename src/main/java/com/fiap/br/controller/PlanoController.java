@@ -2,9 +2,9 @@ package com.fiap.br.controller;
 
 import java.util.List;
 
-import com.fiap.br.models.Produto;
-import com.fiap.br.repositories.ProdutoRepository;
-import com.fiap.br.services.ProdutoService;
+import com.fiap.br.models.Plano;
+import com.fiap.br.repositories.PlanoRepository;
+import com.fiap.br.services.PlanoService;
 import com.fiap.br.services.QueryExecutor;
 
 import jakarta.ws.rs.Consumes;
@@ -18,48 +18,48 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("produtos")
-public class ProdutoController {
-    private final ProdutoService produtoService;
+@Path("planos")
+public class PlanoController {
+    private final PlanoService planoService;
 
-    public ProdutoController() {
-        produtoService = new ProdutoService(new ProdutoRepository(new QueryExecutor()));
+    public PlanoController() {
+        planoService = new PlanoService(new PlanoRepository(new QueryExecutor()));
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Produto> getProdutos() {
-        return produtoService.getProdutos();
+    public List<Plano> getPlanos() {
+        return planoService.findAllPlanos();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Produto getProdutosbyId(@PathParam("id") int id) {
-        return produtoService.getProdutoById(id);
+    public Plano getPlanoById(@PathParam("id") int id) {
+        return planoService.findPlanoById(id);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createProduto(Produto produto) {
-        produtoService.createProduto(produto);
+    public Response createPlano(Plano plano) {
+        planoService.savePlano(plano);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduto(@PathParam("id") int id, Produto produto) {
-        produto.setId(id);
-        produtoService.updateProduto(id, produto);
+    public Response updatePlano(@PathParam("id") int id, Plano plano) {
+        plano.setId(id);
+        planoService.updatePlano(plano, id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProduto(@PathParam("id") int id) {
-        produtoService.deleteProduto(id);
+    public Response deletePlano(@PathParam("id") int id) {
+        planoService.deletePlano(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

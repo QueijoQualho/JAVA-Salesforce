@@ -13,6 +13,6 @@ public class Produto {
     @JsonProperty("nome")
     private String nome;
     @JsonProperty("preco")
-    private Double preco;
+    private double preco;
 
 }

@@ -1,7 +1,7 @@
 package com.fiap.br.repositories;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fiap.br.services.CRUDOperation;
+import com.fiap.br.models.enums.CRUDOperation;
 import com.fiap.br.services.QueryExecutor;
 import com.fiap.br.util.annotations.TableName;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ public class Repository<T> {
         this.queryExecutor = queryExecutor;
     }
 
-    public List<T> findOne(Class<T> entityClass, int id) {
+    public T findOne(Class<T> entityClass, int id) {
         String tableName = getTableName(entityClass);
         Optional<Integer> idOptional = Optional.of(id);
 
@@ -32,10 +32,14 @@ public class Repository<T> {
 
             JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
 
-            String sql = "SELECT * FROM " + tableName + "WHERE " + annotation.value() + " = ?";
-            return queryExecutor.execute(entityClass, sql, null, CRUDOperation.READ, idOptional);
+            String sql = "SELECT * FROM " + tableName + " WHERE " + annotation.value() + " = ?";
+            List<T> result = queryExecutor.execute(entityClass, sql, null, CRUDOperation.READ, idOptional);
+
+            if (!result.isEmpty()) {
+                return result.get(0);
+            }
         } catch (Exception e) {
-            logger.error("Erro o Pegar " + tableName + ": " + e.getMessage(), e);
+            logger.error("Erro ao pegar " + tableName + ": " + e.getMessage(), e);
         }
         return null;
     }
