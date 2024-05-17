@@ -1,23 +1,27 @@
 package com.fiap.br.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fiap.br.util.annotations.TableName;
 
 import lombok.Data;
 
 @Data
+@TableName("Usuarios")
 public class Usuario {
-    private Long id;
+    @JsonProperty("id_usuario")
+    private int id;
+    @JsonProperty("nome")
     private String nome;
+    @JsonProperty("telefone")
     private String telefone;
+    @JsonProperty("email")
     private String email;
+    @JsonProperty("cpf")
     private String cpf;
+    @JsonProperty("cargo")
     private String cargo;
+    @JsonProperty("senha")
     private String senha;
+    @JsonProperty("isAdmin")
     private Boolean isAdmin;
-    private List<Endereco> listaEnderecos = new ArrayList<>();
-
-    public void addEndereco(Endereco endereco) {
-        this.listaEnderecos.add(endereco);
-    }
 }
