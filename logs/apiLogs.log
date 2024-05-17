@@ -2,3 +2,9 @@
 
 2024-05-17 00:07:04 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: não é possível inserir NULL em ("RM553912"."PLANOS"."TIPOPLANO")
 
+2024-05-17 09:12:56 [grizzly-http-server-13] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."PRODUTOS"."NOME")
+
+2024-05-17 09:13:07 [grizzly-http-server-2] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."PRODUTOS"."NOME")
+
+2024-05-17 09:13:14 [grizzly-http-server-9] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."PRODUTOS"."NOME")
+
