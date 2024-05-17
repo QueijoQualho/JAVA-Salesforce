@@ -2,9 +2,7 @@ package com.fiap.br.services;
 
 import java.util.List;
 
-import com.fiap.br.models.Produto;
 import com.fiap.br.models.Usuario;
-import com.fiap.br.repositories.ProdutoRepository;
 import com.fiap.br.repositories.UsuarioRepository;
 
 public class UsuarioService {

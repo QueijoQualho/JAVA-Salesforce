@@ -24,44 +24,34 @@ public class QueryExecutor {
     private Connection connection = DatabaseConnection.getConnection();
 
     public <T> List<T> execute(Class<T> entityClass, String sql, Object[] params, CRUDOperation operation,
-            Optional<Integer> id) {
+            Optional<Integer> id) throws SQLException {
         List<T> results = new ArrayList<>();
 
-        try (PreparedStatement pstm = connection.prepareStatement(sql)) {
-
-            if (id.isPresent()) {
-                Integer idValue = id.get();
-
-                params = (params == null) ? new Object[] { idValue } : Arrays.copyOf(params, params.length + 1);
-                params[params.length - 1] = idValue;
-
+        try (PreparedStatement pstm = prepareStatement(sql, params, id)) {
+            if (operation == CRUDOperation.READ) {
+                results = executeRead(pstm, entityClass);
+            } else {
+                executeUpdate(pstm);
             }
-
-            if (params != null) {
-                setParameters(pstm, params);
-            }
-
-            switch (operation) {
-                case CREATE:
-                case UPDATE:
-                case DELETE:
-                    int affectedRows = pstm.executeUpdate();
-                    System.out.println("Rows affected: " + affectedRows);
-                    break;
-                case READ:
-                    try (ResultSet rs = pstm.executeQuery()) {
-                        while (rs.next()) {
-                            T entity = mapResultSetToEntity(rs, entityClass);
-                            results.add(entity);
-                        }
-                    }
-                    break;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return results;
+    }
+
+    private PreparedStatement prepareStatement(String sql, Object[] params, Optional<Integer> id) throws SQLException {
+        PreparedStatement pstm = connection.prepareStatement(sql);
+
+        if (id.isPresent()) {
+            Integer idValue = id.get();
+            params = (params == null) ? new Object[] { idValue } : Arrays.copyOf(params, params.length + 1);
+            params[params.length - 1] = idValue;
+        }
+
+        if (params != null) {
+            setParameters(pstm, params);
+        }
+
+        return pstm;
     }
 
     private void setParameters(PreparedStatement statement, Object[] params) throws SQLException {
@@ -74,7 +64,22 @@ public class QueryExecutor {
             }
         }
     }
-    
+
+    private <T> List<T> executeRead(PreparedStatement pstm, Class<T> entityClass) throws SQLException {
+        List<T> results = new ArrayList<>();
+        try (ResultSet rs = pstm.executeQuery()) {
+            while (rs.next()) {
+                T entity = mapResultSetToEntity(rs, entityClass);
+                results.add(entity);
+            }
+        }
+        return results;
+    }
+
+    private void executeUpdate(PreparedStatement pstm) throws SQLException {
+        int affectedRows = pstm.executeUpdate();
+        System.out.println("Rows affected: " + affectedRows);
+    }
 
     private <T> T mapResultSetToEntity(ResultSet rs, Class<T> entityClass) throws SQLException {
         T entity = null;
@@ -91,7 +96,6 @@ public class QueryExecutor {
                 Object value = rs.getObject(columnName);
 
                 handleSpecialCases(field, entity, value);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,7 +104,6 @@ public class QueryExecutor {
     }
 
     private void handleSpecialCases(Field field, Object entity, Object value) throws IllegalAccessException {
-        /* Por algum motivo o ORACLE devolve int/number como big decimal */
         if (value instanceof BigDecimal) {
             BigDecimal bigDecimalValue = (BigDecimal) value;
             if (field.getType().isAssignableFrom(double.class)) {
@@ -132,5 +135,4 @@ public class QueryExecutor {
         }
         return columnNames;
     }
-
 }
