@@ -22,6 +22,10 @@ public class Usuario {
     private String cargo;
     @JsonProperty("senha")
     private String senha;
+    @JsonProperty("nome_empresa")
+    private String nomeEmpresa;
+    @JsonProperty("cnpj")
+    private String cnpj;
     @JsonProperty("isAdmin")
     private Boolean isAdmin;
 }

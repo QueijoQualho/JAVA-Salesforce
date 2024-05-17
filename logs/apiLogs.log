@@ -8,3 +8,10 @@
 
 2024-05-17 09:13:14 [grizzly-http-server-9] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."PRODUTOS"."NOME")
 
+2024-05-17 10:31:23 [grizzly-http-server-2] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."USUARIOS"."ISADMIN")
+
+2024-05-17 10:36:52 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: Missing IN or OUT parameter at index:: 9
+2024-05-17 10:37:45 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-00001: unique constraint (RM553912.SYS_C002233697) violated
+
+2024-05-17 10:52:33 [grizzly-http-server-7] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar entidade: ORA-01400: cannot insert NULL into ("RM553912"."PRODUTOS"."NOME")
+

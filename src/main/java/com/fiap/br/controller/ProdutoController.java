@@ -28,38 +28,64 @@ public class ProdutoController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Produto> getProdutos() {
-        return produtoService.getProdutos();
+    public Response getProdutos() {
+        try {
+            List<Produto> produtos = produtoService.getProdutos();
+            return Response.ok(produtos).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao obter produtos: " + e.getMessage()).build();
+        }
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Produto getProdutosbyId(@PathParam("id") int id) {
-        return produtoService.getProdutoById(id);
+    public Response getProdutosbyId(@PathParam("id") int id) {
+        try {
+            Produto produto = produtoService.getProdutoById(id);
+            if (produto != null) {
+                return Response.ok(produto).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Produto não encontrado").build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao obter produto: " + e.getMessage()).build();
+        }
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createProduto(Produto produto) {
-        produtoService.createProduto(produto);
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            produtoService.createProduto(produto);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao criar produto: " + e.getMessage()).build();
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProduto(@PathParam("id") int id, Produto produto) {
-        produto.setId(id);
-        produtoService.updateProduto(id, produto);
-        return Response.status(Response.Status.NO_CONTENT).build();
+        try {
+            produto.setId(id);
+            produtoService.updateProduto(id, produto);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao atualizar produto: " + e.getMessage()).build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteProduto(@PathParam("id") int id) {
-        produtoService.deleteProduto(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
+        try {
+            produtoService.deleteProduto(id);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao deletar produto: " + e.getMessage()).build();
+        }
     }
 }

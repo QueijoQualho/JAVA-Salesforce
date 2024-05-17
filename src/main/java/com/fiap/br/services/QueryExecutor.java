@@ -129,6 +129,9 @@ public class QueryExecutor {
         Map<String, String> columnNames = new LinkedHashMap<>();
         for (Field field : entityClass.getDeclaredFields()) {
             if (field.isAnnotationPresent(JsonProperty.class)) {
+                if (field.getName().equals("isAdmin")) {
+                    continue;
+                }
                 JsonProperty annotation = field.getAnnotation(JsonProperty.class);
                 columnNames.put(field.getName(), annotation.value());
             }

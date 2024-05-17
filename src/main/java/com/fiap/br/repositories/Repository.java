@@ -147,6 +147,9 @@ public class Repository<T> implements Loggable<String> {
         for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (field.isAnnotationPresent(JsonProperty.class)) {
+                if (field.getName().equals("isAdmin")) {
+                    continue;
+                }
                 Object value = field.get(entity);
                 params.add(value);
             }
