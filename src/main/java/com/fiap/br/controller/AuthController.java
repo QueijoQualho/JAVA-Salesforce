@@ -31,7 +31,7 @@ public class AuthController {
         if (!logado) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Usuário ou senha incorretos").build();
         }
-        
+
         return Response.ok().entity("Login realizado com sucesso").build();
     }
 
@@ -40,7 +40,10 @@ public class AuthController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response signup(Usuario usuario) {
-        authService.signup(usuario);
+        boolean isValid = authService.signup(usuario);
+        if (!isValid) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.status(Response.Status.CREATED).build();
     }
 }

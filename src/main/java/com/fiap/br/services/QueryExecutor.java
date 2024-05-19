@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fiap.br.models.enums.CRUDOperation;
+import com.fiap.br.util.annotations.Required;
 import com.fiap.br.util.connection.DatabaseConnection;
 
 public class QueryExecutor {
@@ -125,10 +126,21 @@ public class QueryExecutor {
         }
     }
 
-    public <T> Map<String, String> getColumnNames(Class<T> entityClass) {
+    public <T> Map<String, String> getRequiredColumnNames(Class<T> entityClass) {
         Map<String, String> columnNames = new LinkedHashMap<>();
         for (Field field : entityClass.getDeclaredFields()) {
-            if (field.isAnnotationPresent(JsonProperty.class) && !field.getName().equals("isAdmin")) {
+            if (field.isAnnotationPresent(JsonProperty.class) && field.isAnnotationPresent(Required.class)) {
+                JsonProperty annotation = field.getAnnotation(JsonProperty.class);
+                columnNames.put(field.getName(), annotation.value());
+            }
+        }
+        return columnNames;
+    }
+
+    private <T> Map<String, String> getColumnNames(Class<T> entityClass) {
+        Map<String, String> columnNames = new LinkedHashMap<>();
+        for (Field field : entityClass.getDeclaredFields()) {
+            if (field.isAnnotationPresent(JsonProperty.class)) {
                 JsonProperty annotation = field.getAnnotation(JsonProperty.class);
                 columnNames.put(field.getName(), annotation.value());
             }

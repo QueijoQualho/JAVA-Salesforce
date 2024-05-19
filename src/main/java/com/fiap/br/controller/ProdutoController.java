@@ -46,20 +46,23 @@ public class ProdutoController {
     }
 
     @POST
-    
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createProduto(Produto produto) {
-        produtoService.createProduto(produto);
+        boolean isValid = produtoService.createProduto(produto);
+        if (!isValid) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.status(Response.Status.CREATED).build();
     }
 
     @PUT
-    
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProduto(@PathParam("id") int id, Produto produto) {
-        produto.setId(id);
-        produtoService.updateProduto(id, produto);
+        boolean isValid = produtoService.updateProduto(id, produto);
+        if (!isValid) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

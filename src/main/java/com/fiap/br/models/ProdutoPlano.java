@@ -6,20 +6,19 @@ import com.fiap.br.util.annotations.TableName;
 import lombok.Data;
 
 @Data
-@TableName("ProdutoPlano")
+@TableName("ProdutosPlano")
 public class ProdutoPlano {
     @JsonProperty("ID_PRODUTOPLANO")
-    private Long id;
+    private int id;
 
     @Required
     @JsonProperty("ID_PRODUTO")
-    private Long idProduto;
+    private int idProduto;
 
     @Required
     @JsonProperty("ID_PLANO")
-    private Long idPlano;
+    private int idPlano;
 
-    @Required
     @JsonProperty("VALORTOTAL")
     private double valorTotal;
 }

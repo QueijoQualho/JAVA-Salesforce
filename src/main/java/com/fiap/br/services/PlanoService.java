@@ -2,6 +2,7 @@ package com.fiap.br.services;
 
 import com.fiap.br.models.Plano;
 import com.fiap.br.repositories.PlanoRepository;
+import com.fiap.br.util.validator.FieldValidator;
 
 import java.util.List;
 
@@ -12,20 +13,43 @@ public class PlanoService {
         this.planoRepository = planoRepository;
     }
 
-    public Plano findPlanoById(int id) {
+    public Plano getPlanoById(int id) {
         return planoRepository.findOne(Plano.class, id);
     }
 
-    public List<Plano> findAllPlanos() {
+    public List<Plano> getPlanos() {
         return planoRepository.findAll(Plano.class);
     }
 
-    public void savePlano(Plano plano) {
-        planoRepository.save(plano);
+    public boolean createPlano(Plano plano) {
+        try {
+            boolean isValid = FieldValidator.requiredFieldsFilled(plano);
+
+            if (!isValid) {
+                return false;
+            }
+
+            planoRepository.save(plano);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void updatePlano(Plano plano, int id) {
-        planoRepository.update(plano, id);
+    public boolean updatePlano(Plano plano, int id) {
+
+        try {
+            boolean isValid = FieldValidator.requiredFieldsFilled(plano);
+
+            if (!isValid) {
+                return false;
+            }
+
+            planoRepository.update(plano, id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void deletePlano(int id) {

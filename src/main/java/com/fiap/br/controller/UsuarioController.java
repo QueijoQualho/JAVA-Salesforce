@@ -47,7 +47,10 @@ public class UsuarioController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUsuario(Usuario usuario) {
-        usuarioService.createUsuario(usuario);
+        boolean isValid = usuarioService.createUsuario(usuario);
+        if (!isValid) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -55,8 +58,10 @@ public class UsuarioController {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUsuario(@PathParam("id") int id, Usuario usuario) {
-        usuario.setId(id);
-        usuarioService.updateUsuario(id, usuario);
+        boolean isValid = usuarioService.updateUsuario(id, usuario);
+        if (!isValid) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

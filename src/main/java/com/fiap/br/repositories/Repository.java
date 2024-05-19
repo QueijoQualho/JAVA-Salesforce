@@ -101,7 +101,7 @@ public class Repository<T> implements Loggable<String> {
     }
 
     private String buildSaveSQL(Class<?> entityClass, String tableName) {
-        Map<String, String> columnNames = queryExecutor.getColumnNames(entityClass);
+        Map<String, String> columnNames = queryExecutor.getRequiredColumnNames(entityClass);
         StringBuilder sqlQuery = new StringBuilder("INSERT INTO ").append(tableName).append(" (");
         StringBuilder valuesBuilder = new StringBuilder(" VALUES (");
 
@@ -120,7 +120,7 @@ public class Repository<T> implements Loggable<String> {
     }
 
     private String buildUpdateSQL(Class<?> entityClass, String tableName) throws NoSuchFieldException {
-        Map<String, String> columnNames = queryExecutor.getColumnNames(entityClass);
+        Map<String, String> columnNames = queryExecutor.getRequiredColumnNames(entityClass);
         StringBuilder sqlQuery = new StringBuilder("UPDATE ").append(tableName).append(" SET ");
 
         for (String columnName : columnNames.values()) {

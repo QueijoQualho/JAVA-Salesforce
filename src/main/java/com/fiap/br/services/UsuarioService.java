@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fiap.br.models.Usuario;
 import com.fiap.br.repositories.UsuarioRepository;
+import com.fiap.br.util.validator.FieldValidator;
 
 public class UsuarioService {
     private UsuarioRepository usuarioRepository;
@@ -20,13 +21,34 @@ public class UsuarioService {
         return usuarioRepository.findOne(Usuario.class, id);
     }
 
-    public void createUsuario(Usuario usuario) {
-        usuarioRepository.save(usuario);
+    public boolean createUsuario(Usuario usuario) {
+        try {
+            boolean isValid = FieldValidator.requiredFieldsFilled(usuario);
+
+            if (!isValid) {
+                return false;
+            }
+
+            usuarioRepository.save(usuario);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void updateUsuario(int id, Usuario usuario) {
-        usuario.setId(id);
-        usuarioRepository.update(usuario, id);
+    public boolean updateUsuario(int id, Usuario usuario) {
+        try {
+            boolean isValid = FieldValidator.requiredFieldsFilled(usuario);
+
+            if (!isValid) {
+                return false;
+            }
+
+            usuarioRepository.update(usuario, id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void deleteUsuario(int id) {

@@ -28,3 +28,16 @@
 2024-05-18 23:52:03 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: produtos Parâmetro IN ou OUT ausente do índice:: 2
 2024-05-18 23:53:13 [grizzly-http-server-2] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: produtos Parâmetro IN ou OUT ausente do índice:: 2
 2024-05-19 01:05:42 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao encontrar usuário por e-mail: Cannot invoke "java.util.Optional.isPresent()" because "id" is null
+2024-05-19 01:17:12 [grizzly-http-server-1] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: Usuarios Parâmetro IN ou OUT ausente do índice:: 9
+2024-05-19 12:17:45 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: produtos ORA-01400: não é possível inserir NULL em ("RM553912"."PRODUTOS"."NOME")
+
+2024-05-19 12:18:04 [grizzly-http-server-1] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: produtos ORA-01400: não é possível inserir NULL em ("RM553912"."PRODUTOS"."NOME")
+
+2024-05-19 13:26:35 [grizzly-http-server-0] ERROR com.fiap.br.util.config.Loggable - Erro ao salvar a entidade: Usuarios ORA-00001: restrição exclusiva (RM553912.SYS_C002257190) violada
+
+2024-05-19 13:34:28 [grizzly-http-server-4] ERROR com.fiap.br.util.config.Loggable - Erro ao atualizar a entidade: ProdutosPlano ORA-02291: restrição de integridade (RM553912.SYS_C002217589) violada - chave mãe não localizada
+
+2024-05-19 13:34:36 [grizzly-http-server-5] ERROR com.fiap.br.util.config.Loggable - Erro ao atualizar a entidade: ProdutosPlano ORA-02291: restrição de integridade (RM553912.SYS_C002217589) violada - chave mãe não localizada
+
+2024-05-19 13:34:39 [grizzly-http-server-6] ERROR com.fiap.br.util.config.Loggable - Erro ao atualizar a entidade: ProdutosPlano ORA-02291: restrição de integridade (RM553912.SYS_C002217589) violada - chave mãe não localizada
+

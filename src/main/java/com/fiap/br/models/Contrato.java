@@ -21,6 +21,6 @@ public class Contrato {
     private int idUsuario;
 
     @Required
-    @JsonProperty("tipo_Plano")
+    @JsonProperty("tipo_Pagamento")
     private TipoPagamento tipoPagamento;
 }
