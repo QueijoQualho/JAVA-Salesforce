@@ -28,18 +28,24 @@ public class PlanoController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Plano> getPlanos() {
-        return planoService.findAllPlanos();
+    public Response getPlanos() {
+        List<Plano> planos = planoService.findAllPlanos();
+        return Response.ok(planos).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Plano getPlanoById(@PathParam("id") int id) {
-        return planoService.findPlanoById(id);
+    public Response getPlanoById(@PathParam("id") int id) {
+        Plano plano = planoService.findPlanoById(id);
+        if (plano == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Plano não encontrado").build();
+        }
+        return Response.ok(plano).build();
     }
 
     @POST
+
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPlano(Plano plano) {
         planoService.savePlano(plano);
@@ -47,6 +53,7 @@ public class PlanoController {
     }
 
     @PUT
+
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePlano(@PathParam("id") int id, Plano plano) {

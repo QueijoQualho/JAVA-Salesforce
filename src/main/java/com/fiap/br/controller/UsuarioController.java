@@ -28,15 +28,20 @@ public class UsuarioController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Usuario> getUsuarios() {
-        return usuarioService.getUsuarios();
+    public Response getUsuarios() {
+        List<Usuario> usuarios = usuarioService.getUsuarios();
+        return Response.ok(usuarios).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Usuario getUsuarioById(@PathParam("id") int id) {
-        return usuarioService.getUsuarioById(id);
+    public Response getUsuarioById(@PathParam("id") int id) {
+        Usuario usuario = usuarioService.getUsuarioById(id);
+        if (usuario == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Usuário não encontrado").build();
+        }
+        return Response.ok(usuario).build();
     }
 
     @POST

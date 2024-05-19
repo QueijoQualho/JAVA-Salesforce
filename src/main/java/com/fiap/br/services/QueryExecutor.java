@@ -94,7 +94,6 @@ public class QueryExecutor {
                 field.setAccessible(true);
 
                 Object value = rs.getObject(columnName);
-
                 handleSpecialCases(field, entity, value);
             }
         } catch (Exception e) {
@@ -104,6 +103,7 @@ public class QueryExecutor {
     }
 
     private void handleSpecialCases(Field field, Object entity, Object value) throws IllegalAccessException {
+        /* Por algum motivo o driver do DB ta retornando todo numero como BigDecimal */
         if (value instanceof BigDecimal) {
             BigDecimal bigDecimalValue = (BigDecimal) value;
             if (field.getType().isAssignableFrom(double.class)) {
@@ -128,10 +128,7 @@ public class QueryExecutor {
     public <T> Map<String, String> getColumnNames(Class<T> entityClass) {
         Map<String, String> columnNames = new LinkedHashMap<>();
         for (Field field : entityClass.getDeclaredFields()) {
-            if (field.isAnnotationPresent(JsonProperty.class)) {
-                if (field.getName().equals("isAdmin")) {
-                    continue;
-                }
+            if (field.isAnnotationPresent(JsonProperty.class) && !field.getName().equals("isAdmin")) {
                 JsonProperty annotation = field.getAnnotation(JsonProperty.class);
                 columnNames.put(field.getName(), annotation.value());
             }

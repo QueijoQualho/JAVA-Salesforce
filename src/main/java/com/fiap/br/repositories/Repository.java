@@ -9,17 +9,19 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fiap.br.models.enums.CRUDOperation;
 import com.fiap.br.services.QueryExecutor;
+import com.fiap.br.util.annotations.Required;
 import com.fiap.br.util.annotations.TableName;
 import com.fiap.br.util.config.Loggable;
 
 public class Repository<T> implements Loggable<String> {
 
-    private final QueryExecutor queryExecutor;
+    protected final QueryExecutor queryExecutor;
 
     public Repository(QueryExecutor queryExecutor) {
         this.queryExecutor = queryExecutor;
     }
 
+    /* METODOS CRUD */
     public T findOne(Class<T> entityClass, int id) {
         String tableName = getTableName(entityClass);
         Optional<Integer> idOptional = Optional.of(id);
@@ -54,10 +56,9 @@ public class Repository<T> implements Loggable<String> {
         try {
             String sql = buildSaveSQL(entityClass, tableName);
             List<Object> params = buildParamsList(entity);
-            params.remove(0);
             queryExecutor.execute(entityClass, sql, params.toArray(), CRUDOperation.CREATE, Optional.empty());
         } catch (Exception e) {
-            logError("Erro ao salvar entidade: " + e.getMessage());
+            logError("Erro ao salvar a entidade: " + tableName + " " + e.getMessage());
         }
     }
 
@@ -71,7 +72,7 @@ public class Repository<T> implements Loggable<String> {
             List<Object> params = buildParamsList(entity);
             queryExecutor.execute(entityClass, sql, params.toArray(), CRUDOperation.UPDATE, idOptional);
         } catch (Exception e) {
-            logError("Erro ao atualizar entidade: " + e.getMessage());
+            logError("Erro ao atualizar a entidade: " + tableName + " " + e.getMessage());
         }
     }
 
@@ -83,15 +84,16 @@ public class Repository<T> implements Loggable<String> {
             String sql = buildDeleteSQL(entityClass, tableName);
             queryExecutor.execute(entityClass, sql, null, CRUDOperation.DELETE, idOptional);
         } catch (Exception e) {
-            logError("Erro ao deletar entidade: " + e.getMessage());
+            logError("Erro ao deletar a entidade: " + tableName + " " + e.getMessage());
         }
     }
 
+    /* METODOS PRA MONTAR SQL */
     private String buildFindOneSQL(Class<?> entityClass, String tableName) throws NoSuchFieldException {
         Field idField = entityClass.getDeclaredField("id");
         idField.setAccessible(true);
-        JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
-        return "SELECT * FROM " + tableName + " WHERE " + annotation.value() + " = ?";
+        JsonProperty idName = idField.getAnnotation(JsonProperty.class);
+        return "SELECT * FROM " + tableName + " WHERE " + idName.value() + " = ?";
     }
 
     private String buildFindAllSQL(String tableName) {
@@ -129,8 +131,8 @@ public class Repository<T> implements Loggable<String> {
 
         Field idField = entityClass.getDeclaredField("id");
         idField.setAccessible(true);
-        JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
-        sqlQuery.append(" WHERE ").append(annotation.value()).append(" = ?");
+        JsonProperty idName = idField.getAnnotation(JsonProperty.class);
+        sqlQuery.append(" WHERE ").append(idName.value()).append(" = ?");
 
         return sqlQuery.toString();
     }
@@ -138,18 +140,16 @@ public class Repository<T> implements Loggable<String> {
     private String buildDeleteSQL(Class<?> entityClass, String tableName) throws NoSuchFieldException {
         Field idField = entityClass.getDeclaredField("id");
         idField.setAccessible(true);
-        JsonProperty annotation = idField.getAnnotation(JsonProperty.class);
-        return "DELETE FROM " + tableName + " WHERE " + annotation.value() + " = ?";
+        JsonProperty idName = idField.getAnnotation(JsonProperty.class);
+        return "DELETE FROM " + tableName + " WHERE " + idName.value() + " = ?";
     }
 
+    /* OUTROS */
     private List<Object> buildParamsList(T entity) throws IllegalAccessException {
         List<Object> params = new ArrayList<>();
         for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if (field.isAnnotationPresent(JsonProperty.class)) {
-                if (field.getName().equals("isAdmin")) {
-                    continue;
-                }
+            if (field.isAnnotationPresent(JsonProperty.class) && field.isAnnotationPresent(Required.class)) {
                 Object value = field.get(entity);
                 params.add(value);
             }
